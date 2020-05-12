@@ -40,6 +40,13 @@ public interface TimingMessageQueueInterface {
     public MessageInterface poll(String msgId);
 
     /**
+     * 时间分片的长度
+     * @param t
+     * @return
+     */
+    public Long size(Date t);
+
+    /**
      * 更新消息
      * @param msg
      * @return

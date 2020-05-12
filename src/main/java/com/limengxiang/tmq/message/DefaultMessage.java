@@ -4,12 +4,21 @@ import java.util.Date;
 
 public class DefaultMessage implements MessageInterface {
 
+    private String queueName;
     private String msgId;
     private String body;
     private Integer status;
     private Date schedule;
     private Date receiveAt;
     private Date consumeAt;
+
+    public void setQueueName(String queueName) {
+        this.queueName = queueName;
+    }
+
+    public String getQueueName() {
+        return queueName;
+    }
 
     public void setMsgId(String id) {
         this.msgId = id;

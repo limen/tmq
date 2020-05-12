@@ -4,6 +4,10 @@ import java.util.Date;
 
 public interface MessageInterface {
 
+    public void setQueueName(String queueName);
+
+    public String getQueueName();
+
     public void setMsgId(String id);
 
     public String getMsgId();

@@ -30,6 +30,10 @@ public class DefaultTimingSlicer implements TimingSlicerInterface {
         return sliceList.pop(getSliceKey(t));
     }
 
+    public Long size(Date t) {
+        return sliceList.size(getSliceKey(t));
+    }
+
     public void setSliceKeyStrategy(SliceKeyStrategyInterface sliceStrategy) {
         this.sliceKeyStrategy = sliceStrategy;
     }

@@ -6,4 +6,10 @@ public interface SliceListInterface {
 
     public String pop(String key);
 
+    /**
+     * 切片大小
+     * @param key
+     * @return
+     */
+    public Long size(String key);
 }

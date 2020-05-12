@@ -63,6 +63,10 @@ public class TimingMessageQueue implements TimingMessageQueueInterface {
         return queueStorage.get(id);
     }
 
+    public Long size(Date t) {
+        return slicer.size(t);
+    }
+
     public Integer consumed(MessageInterface msg) {
         msg.setStatus(StatusConsumed);
         msg.setConsumeAt(new Date());
@@ -83,8 +87,11 @@ public class TimingMessageQueue implements TimingMessageQueueInterface {
     }
 
     private void prepareMessage(MessageInterface msg) {
+        msg.setQueueName(queueName());
         msg.setMsgId(messageIdStrategy.uniqueId());
         msg.setStatus(StatusWaiting);
-        msg.setReceiveAt(new Date());
+        if (msg.getReceiveAt() == null) {
+            msg.setReceiveAt(new Date());
+        }
     }
 }

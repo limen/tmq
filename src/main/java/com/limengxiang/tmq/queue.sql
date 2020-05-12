@@ -1,5 +1,6 @@
 CREATE TABLE tmq_queue (
   id INT NOT NULL AUTO_INCREMENT,
+  queue_name VARCHAR(64) NOT NULL COMMENT '队列名称',
   msg_id VARCHAR(24) NOT NULL COMMENT '消息ID',
   body VARCHAR(1024) NOT NULL COMMENT '消息体',
   schedule DATETIME NOT NULL COMMENT '投递时间',

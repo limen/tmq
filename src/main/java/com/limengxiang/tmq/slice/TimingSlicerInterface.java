@@ -13,6 +13,13 @@ public interface TimingSlicerInterface {
 
     public String pull(Date date);
 
+    /**
+     * 获取时间对应的切片大小
+     * @param t
+     * @return
+     */
+    public Long size(Date t);
+
     public void setTimingQueue(TimingMessageQueueInterface timingQueue);
 
     public TimingMessageQueueInterface getTimingQueue();

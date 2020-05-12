@@ -65,8 +65,10 @@ public class TimingMessageQueueTest {
             msg.setSchedule(schedule2);
             tmq.push(msg);
         }
+        Assert.assertEquals(tmq.size(schedule1).intValue(), cnt);
+        Assert.assertEquals(tmq.size(schedule2).intValue(), cnt);
         Long end = new Date().getTime();
-        System.out.println("Push time consumption in milli second:" + (end - start));
+        System.out.println("----------------------Push time consumption in milli second:" + (end - start));
     }
 
     @Test
@@ -89,7 +91,7 @@ public class TimingMessageQueueTest {
             slice2.add(msg);
         }
         Long end = new Date().getTime();
-        System.out.println("Pull time consumption in milli second:" + (end - start));
+        System.out.println("------------------------Pull time consumption in milli second:" + (end - start));
         Assert.assertEquals(slice1.size(), cnt);
         Assert.assertEquals(slice2.size(), cnt);
         Assert.assertEquals(slice1.get(0).getBody(), "right now");

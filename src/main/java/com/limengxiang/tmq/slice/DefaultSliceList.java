@@ -17,4 +17,8 @@ public class DefaultSliceList implements SliceListInterface {
     public String pop(String key) {
         return jedis.rpop(key);
     }
+
+    public Long size(String key) {
+        return jedis.llen(key);
+    }
 }
