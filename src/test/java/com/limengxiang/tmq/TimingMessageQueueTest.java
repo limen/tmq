@@ -17,7 +17,6 @@ import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -73,29 +72,10 @@ public class TimingMessageQueueTest {
 
     @Test
     public void bPull() {
-        ArrayList<MessageInterface> slice1 = new ArrayList<>();
-        ArrayList<MessageInterface> slice2 = new ArrayList<>();
-        Long start = new Date().getTime();
-        while (true) {
-            MessageInterface msg = tmq.pull(schedule1);
-            if (msg == null) {
-                break;
-            }
-            slice1.add(msg);
-        }
-        while (true) {
-            MessageInterface msg = tmq.pull(schedule2);
-            if (msg == null) {
-                break;
-            }
-            slice2.add(msg);
-        }
-        Long end = new Date().getTime();
-        System.out.println("------------------------Pull time consumption in milli second:" + (end - start));
-        Assert.assertEquals(slice1.size(), cnt);
-        Assert.assertEquals(slice2.size(), cnt);
-        Assert.assertEquals(slice1.get(0).getBody(), "right now");
-        Assert.assertEquals(slice2.get(0).getBody(), "10 minutes later");
+        MessageInterface msg1 = tmq.pull(schedule1);
+        MessageInterface msg2 = tmq.pull(schedule2);
+        Assert.assertEquals(msg1.getBody(), "right now");
+        Assert.assertEquals(msg2.getBody(), "10 minutes later");
     }
 
     @Test

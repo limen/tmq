@@ -3,51 +3,7 @@
 
 定时消息队列
 
-## 场景
-
-需要延时发送消息的场景，如
-
-+ 新用户注册，第二天9点发送促销信息
-+ 用户下单，半小时后提醒用户付款
-
-## 目标
-
-根据以上场景，相比普通的消息队列，TMQ需要增加以下特性
-
-+ 每个消息都有投递时间
-+ 可以按投递时间高效获取消息
-
-按投递时间高效获取消息是我们的主要目标
-
-## 方案
-
-### 方案1
-
-给投递时间加索引。按投递时间查询，并按自增ID顺序获取。
-
-存在的问题
-
-+ 当一个投递时间有大量消息时，索引是低效的
-
-### 方案2
-
-采用分表策略，基于投递时间横向拆分。
-
-存在的问题
-
-+ 表数量不可控
-+ 表数据量分布不均
-
-### 方案3（最终方案）
-
-虽然分表策略不可取，我们依然可以按投递时间分割数据，以提升查询性能。
-
-使用MySQL + Redis实现，MySQL作为消息的持久存储层，Redis按时间分片存储消息ID。
-
-优势
-
-- Redis LIST 原子化的``push``, ``pop``命令
-- 高性能：Redis内存操作 + MySQL唯一索引查询
+介绍 [TMQ:定时消息队列](https://blog.csdn.net/u010205879/article/details/106094316)
 
 ## API
 
@@ -76,3 +32,60 @@ size(Date t)
 ```
 consumed(MessageInterface msg)
 ```
+
+## 开始使用
+
+### 准备基础环境
+
+MySQL连接
+
+```
+jdbc:mysql://127.0.0.1:3306/mydemo
+```
+
+Redis连接
+
+```
+localhost:6379
+```
+
+### 创建数据表
+
+```
+CREATE TABLE tmq_queue (
+  id INT NOT NULL AUTO_INCREMENT,
+  queue_name VARCHAR(64) NOT NULL COMMENT '队列名称',
+  msg_id VARCHAR(24) NOT NULL COMMENT '消息ID',
+  body VARCHAR(1024) NOT NULL COMMENT '消息体',
+  schedule DATETIME NOT NULL COMMENT '投递时间',
+  status TINYINT NOT NULL COMMENT '消息状态',
+  receive_at DATETIME NOT NULL COMMENT '接收时间',
+  consume_at DATETIME COMMENT '消费时间',
+  PRIMARY KEY (id),
+  UNIQUE KEY idx_msg_id (msg_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### 测试
+
+见 com.limengxiang.tmq.TimingMessageQueueTest
+
+### 查看数据
+
+MySQL
+
+```
+> SELECT * FROM tmq_queue;
+```
+
+Redis
+
+```
+> keys *:slice:*
+
+> lrange {slice key} 0 -1
+```
+
+## 消息ID生成算法
+
+参考 [xid](https://github.com/rs/xid)
