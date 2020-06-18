@@ -2,16 +2,13 @@ package com.limengxiang.tmq;
 
 import com.limengxiang.tmq.message.MessageIDStrategyInterface;
 import com.limengxiang.tmq.message.MessageInterface;
+import com.limengxiang.tmq.message.MessageStatusEnum;
 import com.limengxiang.tmq.queue.QueueStorageInterface;
 import com.limengxiang.tmq.slice.TimingSlicerInterface;
 
 import java.util.Date;
 
 public class TimingMessageQueue implements TimingMessageQueueInterface {
-
-    public static final Integer StatusWaiting = 0;
-    public static final Integer StatusOccupy = 1;
-    public static final Integer StatusConsumed = 2;
 
     private String name;
     private QueueStorageInterface queueStorage;
@@ -54,7 +51,7 @@ public class TimingMessageQueue implements TimingMessageQueueInterface {
         if (msg == null) {
             return null;
         }
-        msg.setStatus(StatusOccupy);
+        msg.setStatus(MessageStatusEnum.OCCUPIED.value());
         queueStorage.update(msg);
         return msg;
     }
@@ -68,7 +65,7 @@ public class TimingMessageQueue implements TimingMessageQueueInterface {
     }
 
     public Integer consumed(MessageInterface msg) {
-        msg.setStatus(StatusConsumed);
+        msg.setStatus(MessageStatusEnum.CONSUMED.value());
         msg.setConsumeAt(new Date());
         return queueStorage.update(msg);
     }
@@ -89,7 +86,7 @@ public class TimingMessageQueue implements TimingMessageQueueInterface {
     private void prepareMessage(MessageInterface msg) {
         msg.setQueueName(queueName());
         msg.setMsgId(messageIdStrategy.uniqueId());
-        msg.setStatus(StatusWaiting);
+        msg.setStatus(MessageStatusEnum.WAITING.value());
         if (msg.getReceiveAt() == null) {
             msg.setReceiveAt(new Date());
         }
